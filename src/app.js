@@ -6,7 +6,7 @@ export default class App extends LightningElement {
   interest = 0.00;
   processingFee = 0.00;
   riskFee = 0.00;
-
+  response = "";
 
   showFeatures = true;
 
@@ -45,7 +45,7 @@ export default class App extends LightningElement {
     {
         id: "2",
         label: "Silver Loan",
-        value: "Gold Loan",
+        value: "Silver Loan",
         icon: "",
         interest: 18.00,
         processing: 5.00,
@@ -55,7 +55,7 @@ export default class App extends LightningElement {
       {
         id: "3",
         label: "Bronze Loan",
-        value: "Gold Loan",
+        value: "Bronze Loan",
         icon: "",
         interest: 20.00,
         processing: 5.00,
@@ -67,6 +67,11 @@ export default class App extends LightningElement {
 
   onLoanProductSelected(event){
     //get loan product details
-    
+    console.log("logging = ", this.loanProducts.find(opt => opt.value === event.detail.value));
+    let obj = this.loanProducts.find(opt => opt.value === event.detail.value);
+    this.interest =obj.interest;
+    this.adminFee = obj.admin;
+    this.processingFee = obj.processing;
+    this.riskFee = obj.risk;
   }
 }

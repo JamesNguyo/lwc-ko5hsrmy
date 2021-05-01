@@ -20,19 +20,35 @@
               <td><lightning-input label="Months" value="0" onchange={changeHandler}></lightning-input></td>
             </tr>
             <tr>
-              <td><lightning-input label="Loan Product" value={greeting} onchange={changeHandler}></lightning-input></td>
-            </tr>
-            <tr>
-              <td><lightning-input label="Interest" value={interest} onchange={changeHandler}></lightning-input></td>
-            </tr>
-            <tr>
-              <td><lightning-input label="Processing Fee" value={processingFee} onchange={changeHandler}></lightning-input></td>
-            </tr>
-            <tr>
-              <td><lightning-input label="Admin Fee" value={adminFee} onchange={changeHandler}></lightning-input></td>
-            </tr>
-            <tr>
-              <td><lightning-input label="Risk Fee" value={riskFee} onchange={changeHandler}></lightning-input></td>
+              <td>
+                <table >
+                  <tr>
+                    <th>Item</th>
+                    <th>Preset</th>
+                    <th>Negotiated</th>
+                  </tr>
+                  <tr>
+                    <td>Interest: </td>
+                    <td><lightning-input label="Interest" value={interest} onchange={changeHandler} variant="label-hidden" ></lightning-input></td>
+                    <td><lightning-input label="Interest Negotiated" value={interestNeg} onchange={changeHandler} variant="label-hidden" ></lightning-input></td>
+                  </tr>
+                  <tr>
+                    <td>Processing Fee: </td>
+                    <td><lightning-input label="Processing Fee" value={processingFee} onchange={changeHandler} variant="label-hidden"></lightning-input></td>
+                    <td><lightning-input label="Processing Fee Negotiated" value={processingFeeNeg} onchange={changeHandler} variant="label-hidden"></lightning-input></td>
+                  </tr>
+                  <tr>
+                    <td>Administration Fee: </td>
+                    <td><lightning-input label="Admin Fee" value={adminFee} onchange={changeHandler} variant="label-hidden"></lightning-input></td>
+                    <td><lightning-input label="Admin Fee Negotiated" value={adminFeeNeg} onchange={changeHandler} variant="label-hidden"></lightning-input></td>
+                  </tr>
+                  <tr>
+                    <td>Risk Fee: </td>
+                    <td><lightning-input label="Risk Fee" value={riskFee} onchange={changeHandler} variant="label-hidden"></lightning-input></td>
+                    <td><lightning-input label="Risk Fee Negotiated" value={riskFeeNeg} onchange={changeHandler} variant="label-hidden"></lightning-input></td>
+                  </tr>
+                </table>
+              </td>
             </tr>
           </table>
           
