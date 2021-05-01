@@ -3,25 +3,36 @@
         <div class="slds-m-around_medium">
           <table>
             <tr>
-              <td><lightning-input label = "Amount" value={greeting} onchange={changeHandler}></lightning-input></td>
+              <td>
+                <lightning-combobox
+                  name="loan"
+                  placeholder="Choose Loan Product"
+                  value={name}
+                  onchange={onLoanProductSelected}
+                  options={loanProducts}>
+                </lightning-combobox>
+              </td>
             </tr>
             <tr>
-              <td><lightning-input label="Months" value={greeting} onchange={changeHandler}></lightning-input></td>
+              <td><lightning-input label = "Amount" value="0" onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td><lightning-input label="Months" value="0" onchange={changeHandler}></lightning-input></td>
             </tr>
             <tr>
               <td><lightning-input label="Loan Product" value={greeting} onchange={changeHandler}></lightning-input></td>
             </tr>
             <tr>
-              <td><lightning-input label="Interest" value={greeting} onchange={changeHandler}></lightning-input></td>
+              <td><lightning-input label="Interest" value={interest} onchange={changeHandler}></lightning-input></td>
             </tr>
             <tr>
-              <td><lightning-input label="Processing Fee" value={greeting} onchange={changeHandler}></lightning-input></td>
+              <td><lightning-input label="Processing Fee" value={processingFee} onchange={changeHandler}></lightning-input></td>
             </tr>
             <tr>
-              <td><lightning-input label="Admin Fee" value={greeting} onchange={changeHandler}></lightning-input></td>
+              <td><lightning-input label="Admin Fee" value={adminFee} onchange={changeHandler}></lightning-input></td>
             </tr>
             <tr>
-              <td><lightning-input label="Risk Fee" value={greeting} onchange={changeHandler}></lightning-input></td>
+              <td><lightning-input label="Risk Fee" value={riskFee} onchange={changeHandler}></lightning-input></td>
             </tr>
           </table>
           

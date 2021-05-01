@@ -2,6 +2,11 @@ import { LightningElement } from "lwc";
 
 export default class App extends LightningElement {
   title = "Welcome to Lightning Web Components!";
+  adminFee = 0.00;
+  interest = 0.00;
+  processingFee = 0.00;
+  riskFee = 0.00;
+
 
   showFeatures = true;
 
@@ -29,7 +34,8 @@ export default class App extends LightningElement {
     return [
       {
         id: "1",
-        name: "Gold Loan",
+        label: "Gold Loan",
+        value: "Gold Loan",
         icon: "",
         interest: 15.00,
         processing: 5.00,
@@ -38,7 +44,8 @@ export default class App extends LightningElement {
       },
     {
         id: "2",
-        name: "Silver Loan",
+        label: "Silver Loan",
+        value: "Gold Loan",
         icon: "",
         interest: 18.00,
         processing: 5.00,
@@ -47,7 +54,8 @@ export default class App extends LightningElement {
       },
       {
         id: "3",
-        name: "Bronze Loan",
+        label: "Bronze Loan",
+        value: "Gold Loan",
         icon: "",
         interest: 20.00,
         processing: 5.00,
@@ -55,5 +63,10 @@ export default class App extends LightningElement {
         risk: 5.00,
       },
     ];
+  }
+
+  onLoanProductSelected(event){
+    //get loan product details
+    
   }
 }
