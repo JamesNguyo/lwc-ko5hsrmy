@@ -1,15 +1,36 @@
 import { LightningElement } from "lwc";
+// import { loadScript } from "lightning/platformResourceLoader";
+// import moment from "@salesforce/resourceUrl/moment";
 
 export default class App extends LightningElement {
-  title = "Welcome to Lightning Web Components!";
+  title = "Friendly Loan Company";
   adminFee = 0.00;
   interest = 0.00;
   processingFee = 0.00;
   riskFee = 0.00;
   response = "";
-
+  expectedStartDate = new Date();
+  expectedEndDate = new Date();
+  loanDuration = 0;
+  loanMonths = [{"key":String, "mths":[{}]}];
   showFeatures = true;
 
+  // momentInitialized = false;
+
+  // renderedCallback() {
+  //   if (this.momentInitialized) {
+  //       return;
+  //   }
+  //   this.momentInitialized = true;
+  //   loadScript(this, moment)
+  //   .then(() => {
+  //       console.log(window.moment().format());
+  //   })
+  //   .catch(error => {
+  //       console.log(error);
+  //   });
+  // }
+  
   /**
    * Getter for the features property
    */
@@ -74,4 +95,45 @@ export default class App extends LightningElement {
     this.processingFee = obj.processing;
     this.riskFee = obj.risk;
   }
+
+    displayMonths(){
+    let arrO = [{}];//[{month:String, selected:Boolean }];
+    this.loanMonths.length = 0;
+
+    let  monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let yr=this.expectedStartDate.getFullYear();
+    let i;
+    let mthSelected = false;
+    while (yr <= this.expectedEndDate.getFullYear()) {
+      arrO.length=0;
+      for (i = 0; i < 12; i++) {
+        mthSelected = false;
+        if((i==this.expectedStartDate.getMonth() && yr == this.expectedStartDate.getFullYear()) || (i==this.expectedEndDate.getMonth() && yr == this.expectedEndDate.getFullYear())){
+            mthSelected = true;
+        }
+        arrO.push({"key":i,"month":monthNames[i], "selected":mthSelected});
+      }
+      this.loanMonths.push({"key":yr, "mths":arrO,});
+      yr = yr+1;
+    }
+  }
+
+  onLoanDateChanged(event){
+    if (event.target.name === 'dtStart') {
+      this.expectedStartDate = new Date(event.detail.value);
+    }
+    if (event.target.name === 'dtEnd') {
+      this.expectedEndDate = new Date(event.detail.value);
+    }
+    this.loanDuration = this.expectedEndDate - this.expectedStartDate;
+    console.log(event.target.name);
+    this.loanDuration = this.expectedEndDate.getMonth()+ (12*(this.expectedEndDate.getFullYear()-this.expectedStartDate.getFullYear())) - this.expectedStartDate.getMonth();
+
+    this.displayMonths();
+    console.log("this this.expectedStartDate = ",this.expectedStartDate.getMonth(), '***',this.expectedStartDate.getFullYear());
+    
+
+  }
+
+   
 }
