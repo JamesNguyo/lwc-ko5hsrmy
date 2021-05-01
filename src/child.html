@@ -1,0 +1,37 @@
+<template>
+    <lightning-card title="HelloWorld" icon-name="custom:custom14">
+        <div class="slds-m-around_medium">
+          <table>
+            <tr>
+              <td>Credit Amount</td>
+              <td><lightning-input label="Amount" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td>Number 0f Months</td>
+              <td><lightning-input label="Months" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td>Loan Product</td>
+              <td><lightning-input label="LoanProduct" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td>Interest</td>
+              <td><lightning-input label="Interest" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td>Processing Fee</td>
+              <td><lightning-input label="ProcessingFee" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td>Admin Fee</td>
+              <td><lightning-input label="AdminFee" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+            <tr>
+              <td>Risk Fee</td>
+              <td><lightning-input label="RiskFee" value={greeting} onchange={changeHandler}></lightning-input></td>
+            </tr>
+          </table>
+          
+        </div>
+      </lightning-card>
+</template>
