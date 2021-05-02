@@ -29,3 +29,6 @@ h1 {
 .page-right {
     background: #f0efef;
 }
+:host {
+    --sds-c-card-color-background: #a1d6e4;
+}

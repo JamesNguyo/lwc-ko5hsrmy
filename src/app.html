@@ -11,7 +11,7 @@
         </tr>
         <tr>
           <td>
-            <lightning-input label="Amount" value="0" onchange={changeHandler}></lightning-input>
+            <lightning-input label="Amount" value={principalAmount} onchange={onPrincipalSelected}></lightning-input>
           </td>
         </tr>
         <tr>
@@ -67,33 +67,86 @@
                   </lightning-input>
                 </td>
                 <td>
-                  <lightning-input label="Risk Fee Negotiated" value={riskFeeNeg} onchange={changeHandler}
-                    variant="label-hidden"></lightning-input>
+
                 </td>
               </tr>
             </table>
           </td>
         </tr>
         <td>
-          <p><br></br></p>
+          <lightning-input label="Selected Months" value={selectedMonths}></lightning-input>
         </td>
         <tr>
           <td>
             <lightning-input name="dtStart" type="Date" label="Expected Disbursement Date" value="2021-05-03"
               onchange={onLoanDateChanged}></lightning-input>
-            <lightning-input name="dtEnd" type="Date" label="Expected Finish Date" value="2021-05-03"
+            <lightning-input name="dtEnd" type="Date" label="Expected Finish Date" value="2022-05-03"
               onchange={onLoanDateChanged}></lightning-input>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>Monthly Payment: {monthlyPayment} over {loanDuration} Months = {totalRepayable}</p>
+            <p>Total Interest: {sumInterest}</p>
+            <p></p>
+
           </td>
         </tr>
       </table>
       <template if:true={loanMonths}>
+        <table key={mth} style="border-style: solid;">
+          <tr>
+            <td style="border-style: solid;">Year</td>
+            <template for:each={monthNames} for:item="mth">
+              <td key={mth}>{mth}</td>
+            </template>
+          </tr>
+        </table>
         <template for:each={loanMonths} for:item="acc">
-          <p key={acc.key}>{acc.key}</p>
-          <template for:each={acc.mths} for:item="mth">
-            <p key={mth.month}>{mth.month}  || {mth.selected}</p>
-          </template>
+          <table key={acc.key}>
+            <tr>
+              <td>{acc.key}</td>
+              <template for:each={acc.mths} for:item="mth">
+                <td key={mth.month} style="border-style: solid;">
+                  <lightning-card>
+                    <!-- <lightning-button label="New" slot="actions"></lightning-button> -->
+                    <p>
+                      {mth.key}
+                      <lightning-input name={mth.key} label={mth.key} type="Checkbox" value={mth.selected}
+                        checked={mth.selected} onchange={onMonthSelected} variant="label-hidden"></lightning-input>
+                    </p>
+                    <p>Days: {mth.daysBetween}</p>
+
+                    <p>Scheduled Payment: {monthlyPayment}</p>
+                    <p>Principal: {mth.monthlyPrincipal}</p>
+                    <p>Interest: {mth.monthlyInterest}</p>
+                    <p>
+                      <lightning-input name={mth.key} label="Planned Payment" value={mth.plannedPayment}
+                        onchange={onPlannedAmountChanged}></lightning-input>
+                    </p>
+
+                  </lightning-card>
+                  <!-- {mth.key} || {mth.month} || {mth.selected} || {mth.expPaymentDate} ||
+                  {mth.adjPaymentDate} || {mth.daysBetween} -->
+                </td>
+              </template>
+            </tr>
+          </table>
+
         </template>
       </template>
+      <p>**</p>
+      <p>**</p>
+      <p>Data:{selectedMonths}
+        <lightning-input label="Interest Negotiated" value={selectedMonths} variant="label-hidden"></lightning-input>
+      </p>
+      <!-- <template for:each={loanMonths} for:item="acc">
+        <template for:each={acc.mths} for:item="mth">
+          <p key={mth.month}>
+            {mth.key} || {mth.month} || {mth.selected} || {mth.daysBetween}
+          </p>
+        </template>
+      </template> -->
     </div>
   </lightning-card>
 </template>
