@@ -33,6 +33,7 @@ export default class App extends LightningElement {
   showFeatures = true;
   monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   recalculatedDuration = 0;
+  totalLoanDuration = 0.0;
   earlyPayments = 0.00;
   recalculatedEndDate = new Date();
 
@@ -109,7 +110,6 @@ export default class App extends LightningElement {
 
   onLoanProductSelected(event){
     //get loan product details
-    //console.log("logging = ", this.loanProducts.find(opt => opt.value === event.detail.value));
     let obj = this.loanProducts.find(opt => opt.value === event.detail.value);
     this.interestRatePreset =obj.interest;
     this.adminFeeRatePreset = obj.admin;
@@ -126,7 +126,6 @@ export default class App extends LightningElement {
     displayMonths(){
       this.loanMonthsSchedule.length = 0;
       
-      //let monthlyIntRate = parseFloat((/100)/this.loanDuration);
       this.monthlyPayment = this.calculateMonthlyPayment(this.principalAmount, this.interestRate, this.loanDuration);
       
       let yr=this.expectedStartDate.getFullYear();
@@ -170,8 +169,7 @@ export default class App extends LightningElement {
   getDaysBetween(dtParamStart, dtParamEnd){
     let dtStart = new Date(dtParamStart);
     let dtEnd = new Date(dtParamEnd);
-    //let dt = new Date(d.setMonth(d.getMonth() + 1));
-    //console.log("ddd", dtStart.valueOf(), ' *** ', this.expectedStartDate.valueOf() );
+    
     if(this.expectedStartDate.valueOf() > dtParamEnd.valueOf() || dtEnd.valueOf() > this.expectedEndDate.valueOf()){
       return 0;
     }
@@ -185,7 +183,6 @@ export default class App extends LightningElement {
   calculateMonthlyPayment(principalAmt, intRate, loanMths ){
     let mthIntRate = parseFloat((intRate/100)/loanMths);
     return parseFloat(principalAmt * parseFloat((mthIntRate/(1-Math.pow(1+mthIntRate, - loanMths))))).toFixed(2);
-    //parseFloat(this.principalAmount * (monthlyIntRate/(1-Math.pow(1+monthlyIntRate, - this.loanDuration)))).toFixed(2);
   }
 
   amortiseSchedule() {
@@ -193,13 +190,14 @@ export default class App extends LightningElement {
     let previousBal = this.principalAmount;
     let monthlyIntRate = parseFloat((this.interestRate/100)/this.loanDuration);
     let interestAmt = 0.00;
-    this.monthlyPayment = parseFloat(this.principalAmount * (monthlyIntRate/(1-Math.pow(1+monthlyIntRate, - this.loanDuration)))).toFixed(2);
+    //this.monthlyPayment = parseFloat(this.principalAmount * (monthlyIntRate/(1-Math.pow(1+monthlyIntRate, - this.loanDuration)))).toFixed(2);
     //this.monthlyPayment = parseFloat(this.monthlyPayment) + parseFloat(this.sumFeesMonthly);
-    //this.monthlyPayment = parseFloat(this.calculateMonthlyPayment(this.principalAmount, monthlyIntRate, this.loanDuration)).toFixed(2);
+    this.monthlyPayment = parseFloat(this.calculateMonthlyPayment(this.principalAmount, this.interestRate, this.loanDuration)).toFixed(2);
     
     this.totalRepayable = parseFloat(this.monthlyPayment * this.loanDuration).toFixed(2);
     //this.sumInterest = parseFloat(this.totalRepayable - this.principalAmount).toFixed(2);
     this.recalculatedDuration = 0;
+    this.totalLoanDuration = 0;
     this.sumInterest = 0.00;
     
     this.loanMonthsSchedule.map((i) => 
@@ -210,7 +208,7 @@ export default class App extends LightningElement {
           e.runningBalance = previousBal >= 0 ? parseFloat(previousBal).toFixed(2) :0;
           if(e.runningBalance > 0){
             e.monthlyPayment = parseFloat(this.monthlyPayment).toFixed(2);
-            e.monthlyFees = parseFloat((this.sumFees)/this.loanDuration).toFixed(2) ;
+            //e.monthlyFees = parseFloat((this.sumFees)/this.loanDuration).toFixed(2) ;
             //e.plannedPayment = parseFloat(e.plannedPayment);// + parseFloat(e.monthlyFees);
             //parseFloat(this.monthlyPayment).toFixed(2);
             e.plannedPayment = e.plannedPayment?e.plannedPayment: parseFloat(this.monthlyPayment).toFixed(2)
@@ -219,10 +217,15 @@ export default class App extends LightningElement {
             e.monthlyPrincipal = parseFloat(e.plannedPayment - interestAmt).toFixed(2);
             previousBal = previousBal - e.monthlyPrincipal;
             this.sumInterest = parseFloat(parseFloat(this.sumInterest) + parseFloat(e.monthlyInterest)).toFixed(2) ;
-            e.totalPaymentInclFees = e.plannedPayment > 0 ? parseFloat(parseFloat(e.plannedPayment) + parseFloat(e.monthlyFees)).toFixed(2):0.00;
             if(parseFloat(e.plannedPayment) > 0) {
               this.recalculatedDuration += 1;
             }
+            this.totalLoanDuration += 1;
+
+            //fees to change if months have changed
+            //e.monthlyFees = parseFloat((this.sumFees)/this.loanDuration).toFixed(2) ;
+            //e.totalPaymentInclFees = e.plannedPayment > 0 ? parseFloat(parseFloat(e.plannedPayment) + parseFloat(e.monthlyFees)).toFixed(2):0.00;
+            
             
             e.selected = e.plannedPayment > 0 ? true : false;
           }
@@ -233,6 +236,7 @@ export default class App extends LightningElement {
             e.monthlyPrincipal = 0.00;
             e.monthlyPayment = 0.00;
             e.totalPaymentInclFees = 0.00;
+            e.monthlyFees = 0.00;
           }
         }
         else 
@@ -242,8 +246,21 @@ export default class App extends LightningElement {
             e.monthlyPrincipal = 0.00;
             e.monthlyPayment = 0.00;
             e.totalPaymentInclFees = 0.00;
+            e.monthlyFees = 0.00;
           }
         })
+      )
+    })
+
+    //second pass to rebase - dont touch the planned payment field in this second rebase0
+    this.loanMonthsSchedule.map((i) => 
+    {
+      let d = 0;
+      (i.mths.map((e)=> { 
+        e.monthlyFees = parseFloat((this.sumFees)/this.recalculatedDuration).toFixed(2) ;
+        e.totalPaymentInclFees = e.plannedPayment > 0 ? parseFloat(parseFloat(e.plannedPayment) + parseFloat(e.monthlyFees)).toFixed(2):0.00;
+        
+      })
       )
     })
   }
