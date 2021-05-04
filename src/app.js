@@ -211,16 +211,19 @@ export default class App extends LightningElement {
           if(e.runningBalance > 0){
             e.monthlyPayment = parseFloat(this.monthlyPayment).toFixed(2);
             e.monthlyFees = parseFloat((this.sumFees)/this.loanDuration).toFixed(2) ;
-            e.plannedPayment = parseFloat(e.plannedPayment);// + parseFloat(e.monthlyFees);
+            //e.plannedPayment = parseFloat(e.plannedPayment);// + parseFloat(e.monthlyFees);
             //parseFloat(this.monthlyPayment).toFixed(2);
-            //e.plannedPayment = e.plannedPayment?e.plannedPayment: parseFloat(this.monthlyPayment).toFixed(2)
+            e.plannedPayment = e.plannedPayment?e.plannedPayment: parseFloat(this.monthlyPayment).toFixed(2)
             interestAmt = parseFloat(previousBal * monthlyIntRate);
             e.monthlyInterest = parseFloat(interestAmt).toFixed(2);
             e.monthlyPrincipal = parseFloat(e.plannedPayment - interestAmt).toFixed(2);
             previousBal = previousBal - e.monthlyPrincipal;
             this.sumInterest = parseFloat(parseFloat(this.sumInterest) + parseFloat(e.monthlyInterest)).toFixed(2) ;
             e.totalPaymentInclFees = e.plannedPayment > 0 ? parseFloat(parseFloat(e.plannedPayment) + parseFloat(e.monthlyFees)).toFixed(2):0.00;
-            this.recalculatedDuration = this.recalculatedDuration +  e.plannedPayment > 0 ?1:0;
+            if(parseFloat(e.plannedPayment) > 0) {
+              this.recalculatedDuration += 1;
+            }
+            
             e.selected = e.plannedPayment > 0 ? true : false;
           }
           else 
